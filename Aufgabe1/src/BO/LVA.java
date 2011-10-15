@@ -14,8 +14,7 @@ public class LVA {
 	public LVA(	int Nr,	String Name){	
 		setNr(Nr);
 		setName(Name);
-	}
-	
+	}	
 	
 	private int Nr;
 	private String Name;
@@ -35,6 +34,22 @@ public class LVA {
 	public String getName() {
 		return Name;
 	}
+	public void incrementStudAnz() {
+		StudAnz++;
+	}
+	public void decrementStudentAnz() {
+		StudAnz--;
+	}
+	public int getStudAnz() {
+		return StudAnz;
+	}
+	
+	public void setAnmeldeanfang(Date anmeldeanfang) {
+		Anmeldeanfang = anmeldeanfang;
+	}
+	public Date getAnmeldeanfang() {
+		return Anmeldeanfang;
+	}
 	public void setAnmeldeende(Date anmeldeende) {
 		Anmeldeende = anmeldeende;
 	}
@@ -47,28 +62,31 @@ public class LVA {
 	public Date getAbmeldeende() {
 		return Abmeldeende;
 	}
-	public void incrementStudAnz() {
-		StudAnz++;
+	
+	private boolean isNachAnmeldeanfang(){
+		if(getAnmeldeanfang()!=null){
+			return(this.getAnmeldeanfang().before(new Date()));
+		}else{
+			return true;
+		}
 	}
-	public void decrementStudentAnz() {
-		StudAnz--;
-	}
-	public int getStudAnz() {
-		return StudAnz;
-	}
-	public void setAnmeldeanfang(Date anmeldeanfang) {
-		Anmeldeanfang = anmeldeanfang;
-	}
-	public Date getAnmeldeanfang() {
-		return Anmeldeanfang;
+	private boolean isVorAnmeldeende(){
+		if(getAnmeldeende()!=null){
+			return(this.getAnmeldeende().after(new Date()));
+		}else{
+			return true;
+		}
 	}
 	
 	public boolean isAnmeldezeit(){
-		return(getAnmeldeanfang().before(new Date()) && 
-			getAnmeldeende().after(new Date()));
+		return isNachAnmeldeanfang() && isVorAnmeldeende();
 	}
 	
 	public boolean isAbmeldezeit(){
-		return(this.getAbmeldeende().before(new Date()));
+		if(getAbmeldeende()!=null){
+			return(this.getAbmeldeende().before(new Date()));
+		}else{
+			return true;
+		}
 	}
 }

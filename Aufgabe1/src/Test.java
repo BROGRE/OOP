@@ -6,26 +6,24 @@ import BO.Student;
 import Controller.AnAbmeldenController;
 import Controller.AuflistungsController;
 import Controller.BOFactory;
+import Controller.DBControllerFactory;
 
 public class Test {
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		try {
 			doTests();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static void doTests() throws ParseException{
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");		
-		BOFactory factory = new BOFactory();
-		AnAbmeldenController anabmelden = new AnAbmeldenController();
-		AuflistungsController auflisten = new AuflistungsController();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+		
+		DBControllerFactory controllerfactory = new DBControllerFactory();
+		BOFactory factory = controllerfactory.Create_BOFactory();
+		AnAbmeldenController anabmelden = controllerfactory.Create_AnAbmeldenController();
+		AuflistungsController auflisten = controllerfactory.Create_AuflistungsController();
 				
 		LVA lva1 = new LVA(1,"LVA1",dateFormat.parse("10.10.2011"),dateFormat.parse("20.10.2011"),dateFormat.parse("31.10.2011"));
 		LVA lva2 = new LVA(2,"LVA2", dateFormat.parse("10.10.2011"),dateFormat.parse("14.10.2011"),dateFormat.parse("01.10.2011"));
@@ -35,7 +33,7 @@ public class Test {
 		
 		Student stud1 = new Student(0, "student1");
 		Student stud2 = new Student(1, "student2");
-		Student stud3 = new Student(2, "student3");		
+		Student stud3 = new Student(2, "student3");
 		
 		doTest("Adding LVA 1!",true,
 				factory.addLVA(lva1));
@@ -89,14 +87,17 @@ public class Test {
 		doTest("LVA5 hat 1 angemeldete Studenten!",true,
 				lva5.getStudAnz() == 1);
 		
+		System.out.println("------------------");
+		System.out.println("LVAS:");
 		for(LVA lva : auflisten.getLVAs()){
 			System.out.println(String.format("%d %s %d",lva.getNr(), lva.getName(), lva.getStudAnz()));
 		}
 		System.out.println("------------------");
+		System.out.println("LVAS - mit Studenten:");
 		for(LVA lva : auflisten.getLVAs()){
 			System.out.println(String.format("%d %s %d",lva.getNr(), lva.getName(), lva.getStudAnz()));
 			for(Student stud : auflisten.getStudents4LVA(lva)){
-				System.out.println(String.format("%d %s",stud.getMatrikelNr(),stud.getName()));
+				System.out.println(String.format("\t%d %s",stud.getMatrikelNr(),stud.getName()));
 			}
 		}
 	}
@@ -109,6 +110,4 @@ public class Test {
 			System.out.println(" ERROR!");
 		}
 	}
-	
-
 }
